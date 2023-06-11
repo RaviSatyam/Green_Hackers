@@ -191,6 +191,87 @@ const loginEmitter = async (req, res) => {
   return res.status(401).json({ message: "User is not Emitter" });
 };
 
+// POST API -> emitter send allowance request
+const carbonAllowanceRequestTkt = async (req, res) => {
+  const { accountId, raisedBy } = req.body;
+  const isAccountExist = await Emitter.findOne({ accountId: accountId });
+  
+  if (isAccountExist) {
+    try {
+      //const ticket=await Ticket.create(req.body);
+      // Create a new ticket if the user is not already registered
+      const newTicket = new Ticket({
+        ticketId: utils.randomTktGenerator(),
+        raisedBy: raisedBy,
+        accountId: accountId,
+        motive: "carbonAllowance",
+        status: "pending",
+      });
+      newTicket.save();
+      return res
+        .status(200)
+        .json({ message: "Allowance request sent successfully!" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Request failed !" });
+    }
+  }
+  return res
+    .status(404)
+    .json({ message: "Allowance request failed,AccountId does not exist! " });
+};
+
+// Emitter accept the payback request sent by govt
+const emitterAcceptPaybackReq = async (req, res) => {
+  const { accountId } = req.body;
+  //const pvtKey = mapPrivateKeywithId.valueTable[accountId] || 0;
+
+  const emitter = await Emitter.findOne({ accountId: accountId });
+  try {
+    if (!emitter) {
+      return res.status(404).json({ message: "Emitter not found" });
+    }
+    if (!emitter.paybackCC) {
+      return res
+        .status(500)
+        .json({ message: "Emitter already paid paybackCC" });
+    }
+    if (emitter.remainingCC >= emitter.paybackCC) {
+      const payCC = emitter.paybackCC;
+      const remainingBal = emitter.remainingCC;
+      await MRV.findOneAndUpdate(
+        { emitterAccountId: accountId },
+        { paybackCC: 0 }
+      ); // need to modify
+      await Emitter.findOneAndUpdate(
+        { accountId: accountId },
+        { paybackCC: 0, remainingCC: remainingBal - payCC }
+      );
+      await Ticket.updateMany(
+        { accountId: accountId, motive: "payback", status: "pending" },
+        { status: "completed", closedAt: Date.now() }
+      );
+      // Call payback function from hedera-sdk-utils
+
+      const pvtkey = PrivateKey.fromString(
+        utils.mapPrivateKeywithId(accountId)
+      );
+      const tokenTransferStatus = await utilsSdk.paybackToGovtAccount(
+        accountId,
+        payCC,
+        pvtkey
+      );
+      console.log(tokenTransferStatus);
+      const mrvUpdate = await MRV.findOneAndUpdate({ accountId: accountId}, { dueDate: null });
+      const e = await Emitter.findOneAndUpdate({ accountId: accountId }, { dueDate: null });
+
+      return res.status(200).json({ message: "Payback request accepted successfully" });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 
 
 
@@ -204,4 +285,6 @@ module.exports = {
   getTicketById,
   deleteAllTicket,
   loginEmitter,
+  carbonAllowanceRequestTkt,
+  emitterAcceptPaybackReq
 };

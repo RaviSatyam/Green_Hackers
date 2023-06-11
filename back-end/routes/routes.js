@@ -2,8 +2,8 @@ const express=require("express");
 const router=express.Router();
 
 const {registerEmitter,getAllEmitters,getEmitterById,checkEmitterExistanceByAccId,
-    deleteAllEmitters,getAllTicketList,getTicketById,deleteAllTicket,loginEmitter
-}=require("../controllers/emitter-controller.js");
+    deleteAllEmitters,getAllTicketList,getTicketById,deleteAllTicket,loginEmitter,carbonAllowanceRequestTkt,
+    emitterAcceptPaybackReq}=require("../controllers/emitter-controller.js");
 
 
 
@@ -26,6 +26,9 @@ router.route("/checkEmitterExistance").get(checkEmitterExistanceByAccId);
 router.route("/loginEmitter").post(loginEmitter);
 
 router.route("/deleteAllEmitters").delete(deleteAllEmitters);
+router.route("/paybackReqAccepted").put(emitterAcceptPaybackReq);
+
+router.route("/ccAllowanceReq").post(carbonAllowanceRequestTkt);
 
 // Routes for Tickets
 router.route("/getAllTickets").get(getAllTicketList);
