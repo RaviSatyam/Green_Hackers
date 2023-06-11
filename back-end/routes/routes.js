@@ -11,7 +11,12 @@ const {registerGovt,getGovtDetails,acceptEmitterRegistrationRequest,findUserRegi
     acceptEmitterCCAllowanceRequest,paybackRequestToEmitter,freezeAccountByGovt, getEmitterDetailsRequestForCCFromMRVById,getPaybackDetailsRequestByGovtById,
     paybackRequestToEmitterByAcId,checkTokenBalance, getPaybackDetailsRequestByGovt, 
     getEmitterDetailsRequestForCCFromMRV}=require("../controllers/govt-controller.js");
-    
+
+
+ const {setCCallowance,setCCpayback,setCCallowanceToAllSortedEmitter,deleteAllmrv,getEmitterCCReqById, getMRVDetailsByAccountId, getPaybackRequestDetailsByAllSortedEmitter,
+        getAllmrv,setCCpaybackToAllSortedEmitter,getCCallowanceRequestToAllSortedEmitter,getAllEmitterBeforeCC, getPaybackCCReqById,
+        getPaybackListReqestForAllEmitter}=require("../controllers/mrv-controller.js");
+
 
 //Routes for Emitter
 router.route("/addEmitter").post(registerEmitter);
@@ -42,6 +47,24 @@ router.route("/getPaybackDetailsRequestByGovt").get(getPaybackDetailsRequestByGo
 router.route("/getEmitterDetailsRequestForCCFromMRV").get(getEmitterDetailsRequestForCCFromMRV);
 router.route("/getEmitterDetailsRequestForCCFromMRVById").get(getEmitterDetailsRequestForCCFromMRVById);
 router.route("/getPaybackDetailsRequestByGovtById").get(getPaybackDetailsRequestByGovtById);
+
+
+
+// routes for MRV
+router.route("/setCCallowance").put(setCCallowance);
+router.route("/setCCpayback").put(setCCpayback);
+router.route("/getAllEmitterBeforeCC").get(getAllEmitterBeforeCC);
+router.route("/setCCForAllSortedEmitter").put(setCCallowanceToAllSortedEmitter);
+router.route("/getPaybackRequestDetailsByAllSortedEmitter").get(getPaybackRequestDetailsByAllSortedEmitter);
+router.route("/deleteAllmrv").delete(deleteAllmrv);
+router.route("/getAllmrvList").get(getAllmrv);
+router.route("/setCCpaybackForAllSortedEmitter").put(setCCpaybackToAllSortedEmitter);
+router.route("/getCCallowanceRequestToAllSortedEmitter").get(getCCallowanceRequestToAllSortedEmitter);
+router.route("/getMRVDetailsByAccountId").get(getMRVDetailsByAccountId);
+router.route("/getEmitterCCReqById").get(getEmitterCCReqById);
+router.route("/getPaybackCCReqById").get(getPaybackCCReqById);
+router.route("/getPaybackListReqestForAllEmitter").get(getPaybackListReqestForAllEmitter);
+
 
 
 module.exports=router;
