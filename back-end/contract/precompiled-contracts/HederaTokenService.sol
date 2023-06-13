@@ -376,4 +376,25 @@ abstract contract HederaTokenService is HederaResponseCodes {
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
     }
 
+
+    // // Freeze account
+    //  function freezeToken(address token, address account)
+    //     external
+    //     returns (int64 responseCode){
+    //         (bool success, bytes memory result) = precompileAddress.call(
+    //         abi.encodeWithSelector(IHederaTokenService.freezeToken.selector,
+    //         token, account));
+    //     responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
+    //     }
+
+    // // Unfreeze account
+    //  function unfreezeToken(address token, address account)
+    //     external
+    //     returns (int64 responseCode){
+    //         (bool success, bytes memory result) = precompileAddress.call(
+    //         abi.encodeWithSelector(IHederaTokenService.unfreezeToken.selector,
+    //         token, account));
+    //     responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
+    //     }
+
 }

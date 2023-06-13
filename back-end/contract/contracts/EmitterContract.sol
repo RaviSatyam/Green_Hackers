@@ -2,14 +2,17 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 // Compile with remix for remote imports to work - otherwise keep precompiles locally
-import "../precompiled-contracts/HederaTokenService.sol";
-import "../precompiled-contracts/HederaResponseCodes.sol";
+// import "../precompiled-contracts/HederaTokenService.sol";
+// import "../precompiled-contracts/HederaResponseCodes.sol";
+import "../precompiled-contracts-2/HederaTokenService.sol";
+import "../precompiled-contracts-2/HederaResponseCodes.sol";
+
 
 // Fields required for emitter
 struct Emitter{
-    int64 allowableCC;
-    int64 remainingCC;
-    int64 paybackCC;
+    int64 allowableCC;//300   lockFund=300*2=600Hbar
+    int64 remainingCC;//300
+    int64 paybackCC;//30
     uint dueDate;
     uint penalty;
 }
@@ -61,8 +64,15 @@ contract EmitterContract is HederaTokenService{
             int64 amount=emitterInfo.paybackCC;
             paybackTokenToGovt(amount);
             emitterInfo.paybackCC=0;
+            // Call penalty check function (on the basis of due date)
+            uint _penalty=penaltyCalculation();
+
 
             // Call tansferHbar Function to send Hbar from Contract address to Emitter address
+            uint _amount=uint64(emitterInfo.paybackCC)*2*100000000-_penalty;
+            transferHbar(_amount);
+        }else{
+            revert("Emitter does not payback CC");
         }
 
     }
@@ -77,20 +87,49 @@ contract EmitterContract is HederaTokenService{
         }
     }
 
-    //Function to set allowable CC
-    // function setAllowableCC(uint _allowableCC) public{
+    // function to calculate penalty
+    function penaltyCalculation() public view returns(uint penalty){
+        // for 1 day= 1 Hbar
+        uint _extraTime=block.timestamp-(emitterInfo.dueDate);
+        if(_extraTime>0){
+            uint _penalty=(_extraTime/(24*3600))*10000000;
+            return _penalty;
+        }
+    }
 
-
-    // }
+    
 
     // Function to send payback request to Emitter
     function sendPaybackReqToEmitter(int64 _paybackCC)public{
         emitterInfo.paybackCC=(emitterInfo.paybackCC)+_paybackCC;
         
-        // Set due date functionality
-
+        // Set due date functionality // by default due date=10 days
+        emitterInfo.dueDate=block.timestamp + (10*24*3600);
+         
     }
 
+
+    // Freeze Emitter account-----> On the basis platform rules
+    function freezeEmitterAccount()public{
+        int response= HederaTokenService.freezeToken(tokenId, emitter_address);
+        if (response != HederaResponseCodes.SUCCESS) {
+            revert ("Failed to Freeze token");
+        }
+    }
+
+    // Unfreeze Emitter account-----> On the basis platform rules
+    function unFreezeEmitterAccount()public{
+        int response= HederaTokenService.unfreezeToken(tokenId, emitter_address);
+        if (response != HederaResponseCodes.SUCCESS) {
+            revert ("Failed to Unfreeze token");
+        }
+    }
+
+
+
+// write unfreezeEmitter T&C 
+
+// Where should we call freezeEmitterAccount() function
 
 
 
