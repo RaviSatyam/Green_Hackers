@@ -64,13 +64,23 @@ contract EmitterContract is HederaTokenService{
             int64 amount=emitterInfo.paybackCC;
             paybackTokenToGovt(amount);
             emitterInfo.paybackCC=0;
+            emitterInfo.remainingCC=(emitterInfo.remainingCC)-amount;
+
             // Call penalty check function (on the basis of due date)
-            uint _penalty=penaltyCalculation();
+            uint penalty;
+            uint extraDays;
+            (penalty,extraDays)=penaltyCalculation();
 
 
             // Call tansferHbar Function to send Hbar from Contract address to Emitter address
-            uint _amount=uint64(emitterInfo.paybackCC)*2*100000000-_penalty;
+            uint _amount=uint64(emitterInfo.paybackCC)*2*100000000-penalty;
             transferHbar(_amount);
+
+            // Check condition for freeze
+            if(extraDays>15){
+                freezeEmitterAccount();
+            }
+            
         }else{
             revert("Emitter does not payback CC");
         }
@@ -88,13 +98,13 @@ contract EmitterContract is HederaTokenService{
     }
 
     // function to calculate penalty
-    function penaltyCalculation() public view returns(uint penalty){
+    function penaltyCalculation() public view returns(uint penalty, uint extraDays){
         // for 1 day= 1 Hbar
-        uint _extraTime=block.timestamp-(emitterInfo.dueDate);
-        if(_extraTime>0){
-            uint _penalty=(_extraTime/(24*3600))*10000000;
-            return _penalty;
-        }
+        uint _extraTime=(block.timestamp-(emitterInfo.dueDate))/(24*3600);
+
+        uint _penalty=_extraTime*10000000;
+            return (_penalty,_extraTime);
+    
     }
 
     
@@ -128,6 +138,13 @@ contract EmitterContract is HederaTokenService{
 
 
 // write unfreezeEmitter T&C 
+function unFreezeEmitterAccountTandC() public{
+    //Need to pay extra Hbar-> 10 Hbar
+    require(getBalance()>1000000000,"Balance of emitter account is not enough to unfreeze");
+     govt_address.transfer(1000000000);
+     unFreezeEmitterAccount();
+
+}
 
 // Where should we call freezeEmitterAccount() function
 
