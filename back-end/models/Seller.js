@@ -19,14 +19,6 @@ const sellerSchema=new mongoose.Schema({
         type:Number,
         default:0
     },
-    minBalCC:{
-        type:Number,
-        default:0
-    },
-    carbonEmitted:{
-        type:Number,
-        default:0
-    },
    amountOfTokenSell:{
      type:Number,
      default:0

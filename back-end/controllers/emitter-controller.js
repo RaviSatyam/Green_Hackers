@@ -1,32 +1,40 @@
+//importing utils-sdk
+const utilsSdk = require("../hedera-utils/utils-sdk");
 
-//Import dependencies
-const {
-  PrivateKey
-} = require("@hashgraph/sdk");
 const Emitter = require("../models/Emitters");
+// const Govt = require("../models/Govt");
 const Ticket = require("../models/Ticket");
-const utils = require("../utils/utils");
+const utils = require("../hedera-utils/utils");
 const MRV = require("../models/mrv");
-const utilsSdk = require("../utils/hedera_utils");
+const { PrivateKey } = require("@hashgraph/sdk");
+require("dotenv").config({ path: "../../.env" });
+// To register new emitter
+// const registerEmitter=async(req,res)=>{
+//     try{
+//      const emitter= await Emitter.create(req.body);
+//      return res.status(200).json({message:"Registered successfully!"});
+//     } catch(error){
+//         console.log(error);
+//         return res.status(500).json({message:"Registration failed !"});
+//     }
 
-require("dotenv").config({ path: "../.env" });
-
+// };
 
 // Get Emitter by account Id
 const getEmitterById = async (req, res) => {
   const accountId  = req.query.accountId;
   const emitterInfo = await Emitter.findOne({ accountId: accountId });
+  // console.log(emitterInfo);
   if (emitterInfo) {
     try {
       return res.status(200).json(emitterInfo);
     } catch (error) {
-       console.log(error);
-      return res.status(500).json({message:error});
+      return console.log(error);
+      //return res.status(404).json({message:"Ticket info not found"});
     }
   }
   return res.status(404).json({ message: "Emitter info not found" });
 };
-
 // Fetch all emitters details
 const getAllEmitters = async (req, res) => {
   try {
@@ -55,13 +63,48 @@ const checkEmitterExistanceByAccId = async (req, res) => {
   return res.status(404).json({ message: "This user does not exist !" });
 };
 
-
+// POST API -> emitter send allowance request
+const carbonAllowanceRequestTkt = async (req, res) => {
+  const { accountId, raisedBy } = req.body;
+  const isAccountExist = await Emitter.findOne({ accountId: accountId });
+  // const isTkt= await Ticket.findOne({accountId:accountId});
+  // console.log("THKHJJJJ");
+  // console.log(isTkt);
+  if (isAccountExist) {
+    try {
+      //const ticket=await Ticket.create(req.body);
+      // Create a new ticket if the user is not already registered
+      const newTicket = new Ticket({
+        ticketId: utils.randomTktGenerator(),
+        raisedBy: raisedBy,
+        accountId: accountId,
+        motive: "carbonAllowance",
+        status: "pending",
+      });
+      newTicket.save();
+      return res
+        .status(200)
+        .json({ message: "Allowance request sent successfully!" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Request failed !" });
+    }
+  }
+  return res
+    .status(404)
+    .json({ message: "Allowance request failed,AccountId does not exist! " });
+};
 
 // Delete all existed emitters list
 const deleteAllEmitters = async (req, res) => {
   try {
     await Emitter.deleteMany({});
 
+    // disscociating token
+    // const tokenDissociationStatus = await utilsSdk.dissociateTokenWithAccount(
+    //   accountId,
+    //   pvtkey
+    // );
     return res.status(200).json({ message: "Deleted successfully!" });
   } catch (error) {
     console.log(error);
@@ -76,13 +119,15 @@ const registerEmitter = async (req, res) => {
   try {
     const { name, accountId, description, email, region, industryType } =
       req.body;
-
+   
     // Check if user exists in the database
     const existingUser = await Emitter.findOne({ accountId: accountId });
     if (existingUser) {
       return res.status(404).send({ message: "User already exists." });
     }
-
+    const balhbar= await utilsSdk.checkHbarBal(accountId);
+    const x=parseFloat(balhbar.toString());
+ //console.log(x);
     // Create a new user object
     const newUser = new Emitter({
       name,
@@ -91,6 +136,7 @@ const registerEmitter = async (req, res) => {
       email,
       region,
       industryType,
+      availableHbar:x,
       //ticketId: null // initialize with null
     });
 
@@ -119,8 +165,10 @@ const registerEmitter = async (req, res) => {
 
 // Get ticket detail
 const getAllTicketList = async (req, res) => {
+  console.log("Get All tkt");
   try {
     const ticketList = await Ticket.find();
+    // console.log(ticketList);
     return res.status(200).json(ticketList);
   } catch (error) {
     return res.status(404).json({ message: "Ticket list not found" });
@@ -130,13 +178,13 @@ const getAllTicketList = async (req, res) => {
 const getTicketById = async (req, res) => {
   const ticketId  = req.query.ticketId;
   const ticketInfo = await Ticket.findOne({ tiketId: ticketId });
-  
+  console.log(ticketInfo);
   if (ticketInfo) {
     try {
       return res.status(200).json(ticketInfo);
     } catch (error) {
-       console.log(error);
-      return res.status(500).json({message:"Internal server error"});
+      return console.log(error);
+      //return res.status(404).json({message:"Ticket info not found"});
     }
   }
   return res.status(404).json({ message: "Ticket info not found" });
@@ -146,13 +194,16 @@ const getTicketById = async (req, res) => {
 const deleteAllTicket = async (req, res) => {
   try {
     await Ticket.deleteMany({});
+    // const pvtkey = PrivateKey.fromString(
+    //   utils.mapPrivateKeywithId(accountId)
+    // );
     return res.status(200).json({ message: "Deleted successfully!" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "failed to delete!" });
   }
 };
-
+//*************************************** */
 
 //*****  Web3 authentication needed */
 // Emitter login API
@@ -161,6 +212,8 @@ const loginEmitter = async (req, res) => {
   const { accountId } = req.body;
 
   const emitter = await Emitter.findOne({ accountId: accountId });
+
+  //console.log(emitter)
 
   // Check for govt or MRV
 
@@ -192,37 +245,7 @@ const loginEmitter = async (req, res) => {
     }
   }
 
-  return res.status(401).json({ message: "User is not Emitter" });
-};
-
-// POST API -> emitter send allowance request
-const carbonAllowanceRequestTkt = async (req, res) => {
-  const { accountId, raisedBy } = req.body;
-  const isAccountExist = await Emitter.findOne({ accountId: accountId });
-  
-  if (isAccountExist) {
-    try {
-      //const ticket=await Ticket.create(req.body);
-      // Create a new ticket if the user is not already registered
-      const newTicket = new Ticket({
-        ticketId: utils.randomTktGenerator(),
-        raisedBy: raisedBy,
-        accountId: accountId,
-        motive: "carbonAllowance",
-        status: "pending",
-      });
-      newTicket.save();
-      return res
-        .status(200)
-        .json({ message: "Allowance request sent successfully!" });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: "Request failed !" });
-    }
-  }
-  return res
-    .status(404)
-    .json({ message: "Allowance request failed,AccountId does not exist! " });
+  return res.status(404).json({ message: "User is not Emitter" });
 };
 
 // Emitter accept the payback request sent by govt
@@ -276,19 +299,16 @@ const emitterAcceptPaybackReq = async (req, res) => {
   }
 };
 
-
-
-
 module.exports = {
   registerEmitter,
   getAllEmitters,
   getEmitterById,
   checkEmitterExistanceByAccId,
+  carbonAllowanceRequestTkt,
   deleteAllEmitters,
   getAllTicketList,
   getTicketById,
   deleteAllTicket,
   loginEmitter,
-  carbonAllowanceRequestTkt,
-  emitterAcceptPaybackReq
+  emitterAcceptPaybackReq,
 };

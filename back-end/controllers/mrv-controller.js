@@ -1,9 +1,7 @@
-
-//Import dependencies
 const Emitter = require("../models/Emitters");
-
+const Ticket = require("../models/Ticket");
 const MRV = require("../models/mrv");
-
+const utils = require("../hedera-utils/utils");
 
 // PUT api to set allowance CC for each individual Emitter
 
@@ -204,7 +202,14 @@ const setCCpaybackToAllSortedEmitter = async (req, res) => {
     };
     const x = valueTable[region][industryType] || 0;
     const cc = x / 10;
-   
+    //const value = valueTable[region][industryType] || 0; 
+    // set a default value if region or industry type is not recognized
+
+    //console.log(`The value for region ${region} and industry type ${industryType} is ${x}.`);
+    //const emitter=await Emitter.findOne({accountId:accountId});
+
+    // const currentDate = new Date();
+    // const durationInDays = 5;
 
     if (!emitterList) {
         return res.status(404).json({ message: "Emitter details not found" });
@@ -231,7 +236,8 @@ const setCCpaybackToAllSortedEmitter = async (req, res) => {
             }
         }
     }
-   
+    // console.log("Print updated list")
+    // console.log(result1);
     return res.status(200).json({ message: "CC payback set to all Emitters" })
 };
 

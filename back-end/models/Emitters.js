@@ -75,6 +75,10 @@ const emitterSchema=new mongoose.Schema({
     isSeller:{
         type:Boolean,
         default:false
+       },
+       availableHbar:{
+        type:Number,
+        default:0
        }
     
     

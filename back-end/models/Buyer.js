@@ -31,6 +31,11 @@ const buyerSchema=new mongoose.Schema({
    wishToBuy:{
     type:Boolean,
     default:0
+   },
+   selectedSellerId:{
+    type:String,
+    unique:true,
+    dafault:null
    }
 });
 

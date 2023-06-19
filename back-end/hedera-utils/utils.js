@@ -1,3 +1,12 @@
+//Import dependencies
+const {
+    TransferTransaction, Client, PrivateKey,
+    TokenAssociateTransaction, Hbar,
+    AccountBalanceQuery, Wallet
+} = require("@hashgraph/sdk");
+
+require('dotenv').config();
+// Create random ticket Id
 module.exports.randomTktGenerator = () => {
     const length = 12;
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyz0123456789';
@@ -8,7 +17,6 @@ module.exports.randomTktGenerator = () => {
     //console.log(ticketId)
     return ticketId;
 }
-
 
 
 
@@ -33,3 +41,7 @@ module.exports.mapPrivateKeywithId = (accountID) => {
     return valueTable[accountID];
 }
 
+//module.exports=randomTktGenerator;
+//const t=randomTktGenerator();
+// console.log("Hi");
+//console.log(!0)

@@ -4,19 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./back-end/app.js",
-
-    
-
-    "cs_1": "node ./back-end/1_deploy_contract_factory.js",
-
-    "cs_2": "node ./back-end/2_createMS_contract_Id_CF.js",
-
-    "cs_3": "node ./back-end/3_decode_new_contractId.js",
-
-
-    "cs_4": "node ./back-end/4_call_functions.js"
-
+    "start": "nodemon ./back-end/app.js"
 
     
   },

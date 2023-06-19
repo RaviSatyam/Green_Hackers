@@ -1,20 +1,26 @@
 //Import dependencies
 const {
-  PrivateKey
+  TransferTransaction,
+  Client,
+  PrivateKey,
+  TokenAssociateTransaction,
+  Hbar,
+  AccountBalanceQuery,
+  Wallet,
 } = require("@hashgraph/sdk");
 
 //importing utils-sdk
-const utilsSdk = require("../utils/hedera_utils");
+const utilsSdk = require("../hedera-utils/utils-sdk");
 
 const govt = require("../models/Govt");
 const Emitter = require("../models/Emitters");
 const Ticket = require("../models/Ticket");
 const MRV = require("../models/mrv");
-const utils = require("../utils/utils");
+const utils = require("../hedera-utils/utils");
 
 const registerGovt = async (req, res) => {
   const isGovernment = await govt.findOne({ isGovernment: true });
-  
+  console.log(isGovernment);
   if (isGovernment) {
     return res.status(400).json({ message: "Government already exist" });
   }
@@ -29,7 +35,6 @@ const registerGovt = async (req, res) => {
   }
 };
 
-//Function to fetch all users those are not Emitter
 const findUserRegisterDetails = async (req, res) => {
   try {
     const userList = await Emitter.find({ isEmitter: false });
@@ -39,8 +44,6 @@ const findUserRegisterDetails = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch!!" });
   }
 };
-
-//Get govt details
 const getGovtDetails = async (req, res) => {
   try {
     const govtDetails = await govt.find(req.query);
@@ -55,7 +58,7 @@ const getGovtDetails = async (req, res) => {
 const acceptEmitterRegistrationRequest = async (req, res) => {
   const { accountId } = req.body;
   try {
-
+    //const emitter = await Emitter.findOneAndUpdate({accountId}, req.body); // it can be used for multiple fields
     const emitter = await Emitter.findOne({ accountId });
     if (!emitter) {
       return res.status(404).json({ message: "Emitter details not found" });
@@ -107,7 +110,6 @@ const rejectEmitterRegistrationRequest = async (req, res) => {
         return res.status(200).json({ message: "Deleted Emitter details" });
       } catch (err) {
         console.log(err);
-        return res.status(500).json({ message: err.message });
       }
     }
   }
@@ -150,7 +152,7 @@ const acceptEmitterCCAllowanceRequest = async (req, res) => {
       accountId,
       tokenAmount
     );
-    //console.log(tokenTransferStatus);
+    console.log(tokenTransferStatus);
 
     return res.status(200).json({ message: "Updated Emitter details" });
   } catch (err) {
@@ -281,7 +283,24 @@ const freezeAccountByGovt = async (req, res) => {
 
 }
 
+// Get API to fetch the emitter details who requested for CC Allowance
+// const getEmitterDetailRequestedForCC = async (req, res) => {
+//   try {
+//     const tickets = await Ticket.find({
+//       motive: "carbonAllowance",
+//       status: "pending"
+//     }).select("accountId");
 
+//     const accountIDs = tickets.map(ticket => ticket.accountId);
+
+//     const emitters = await Emitter.find({
+//       accountId: { $in: accountIDs }
+//     });
+//     res.status(200).json(emitters);
+//   } catch (err) {
+//     res.status(500).json({ error: err });
+//   }
+// }
 // Get API to fetch the emitter details govt portal who requested for CC Allowance with MRV setted Details on the govt dashboard today 5/17/2023
 const getEmitterDetailsRequestForCCFromMRV = async (req, res) => {
   try {

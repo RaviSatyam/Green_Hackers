@@ -3,11 +3,11 @@ const {
     TransferTransaction, Client, PrivateKey,
     TokenAssociateTransaction, Hbar,
     AccountBalanceQuery, Wallet, AccountInfoQuery,
-    TokenDissociateTransaction,
-    getTokensForAccount
+    TokenDissociateTransaction
 } = require("@hashgraph/sdk");
 
 require('dotenv').config({ path: '../.env' });
+const utils = require("./utils")
 // fetch Account1 and set is as treasury account 
 const treasuryId = process.env.MY_ACCOUNT_ID;
 const treasuryKey = PrivateKey.fromString(process.env.MY_PRIVATE_KEY);
@@ -100,8 +100,8 @@ module.exports.balanceTokenQuery = async function (accountID) {
 module.exports.transferHbar = async function (senderAccount, receiverAccount) {
     //Create the transfer transaction
     const sendHbar = await new TransferTransaction()
-        .addHbarTransfer(senderAccount, Hbar.fromTinybars(-1000)) //Sending account
-        .addHbarTransfer(receiverAccount, Hbar.fromTinybars(1000)) //Receiving account
+        .addHbarTransfer(senderAccount, new Hbar(-105)) //Sending account
+        .addHbarTransfer(receiverAccount, new Hbar(105)) //Receiving account
         .execute(client);
 
     //Verify the transaction reached consensus
@@ -112,12 +112,16 @@ module.exports.transferHbar = async function (senderAccount, receiverAccount) {
 
 // Check Hbar balance
 module.exports.checkHbarBal = async function (accountId) {
+    //Hbar.from(getBalance).toTinybars().toNumber()
     //Check the account's balance
     const getBalance = await new AccountBalanceQuery()
         .setAccountId(accountId)
         .execute(client);
+    //console.log("The account balance after the transfer is: " + getBalance.hbars + " hbar.")
+    const bal = getBalance.hbars
 
-    console.log("The account balance after the transfer is: " + getBalance.hbars + " hbar.")
+    //console.log(formated_balance);
+    return bal
 }
 
 // Payback function-> transfer FT to govt account
@@ -149,7 +153,13 @@ module.exports.paybackToGovtAccount = async function (accountID, tokenAmount, se
 // Freeze Emitter Account
 module.exports.freezeEmitterAccount = async function (accountID) {
 
-    
+    // const accountInfo = await new AccountInfoQuery().setAccountId(accountID).execute(client);
+    //checking if the account is associated with the token or not
+    // const associatedTokenId = accountInfo.tokenRelationships.get(tokenId);
+    // if (!associatedTokenId) {
+    //     console.log("Token is not associated with the account. Please associate the token");
+    //     return;
+    // }
     //Freeze an account from transferring a token
     const transaction = await new TokenFreezeTransaction()
         .setAccountId(accountID)
@@ -204,4 +214,61 @@ module.exports.dissociateTokenWithAccount = async function (accountID, accPrivat
     }
 
 }
+//Atomic Swap between a CC Token and hbar
+module.exports.atomicSwapTransaction = async function (sellerId, buyerId, amountOfTokenBuy, hbarToBePaid) {
+    const buyerKey = PrivateKey.fromString(utils.mapPrivateKeywithId(buyerId));
+    const sellerKey = PrivateKey.fromString(utils.mapPrivateKeywithId(sellerId));
+    //Atomic swap between a Hedera Token Service token and hbar
+    const atomicSwap = await new TransferTransaction()
+        .addHbarTransfer(buyerId, new Hbar(-hbarToBePaid))
+        .addHbarTransfer(sellerId, new Hbar(hbarToBePaid))
+        .addTokenTransfer(tokenId, sellerId, -amountOfTokenBuy)
+        .addTokenTransfer(tokenId, buyerId, amountOfTokenBuy)
+        .freezeWith(client);
 
+    //Sign the transaction with accountId1 and accountId2 private keys, submit the transaction to a Hedera network
+    // const txResponse = await (await (await atomicSwap.sign(buyerKey)).sign(sellerKey)).execute(client);
+    //  console.log("Atomic Swap Transaction"+txResponse);
+    //  return txResponse;
+
+    //Sign with the sender account private key and recipient private key
+    const signTx = await (await atomicSwap.sign(sellerKey)).sign(buyerKey);
+
+    //Sign with the client operator private key and submit to a Hedera network
+    const txResponse = await signTx.execute(client);
+
+    //Request the receipt of the transaction
+    const receipt = await txResponse.getReceipt(client);
+
+    //Obtain the transaction consensus status
+    const transactionStatus = receipt.status;
+
+    console.log(`\n- Atomic swap status: ${transactionStatus} \n`);
+    console.log(`Transaction ID: ${txResponse.transactionId} \n`);
+    return transactionStatus;
+
+}
+
+// Check association status
+// module.exports.checkAssociationStatus = async function (accountID) {
+    // get account information
+    // const accountInfo = await client.getAccountTokens(accountID);
+
+    // // check if the token is associated with the account
+    // const isAssociated = accountTokens.some((token)=>token.tokenId.toString()=== tokenId);
+    // console.log(isAssociated);
+
+    // return isAssociated;
+    // try {
+    // const token = TokenId.fromString(tokenId);
+    // const tokenInfo = await new TokenInfoQuery()
+    // .setTokenId(token)
+    // .execute(client);
+
+    // const isAssociated = tokenInfo.associations.accountAssociations.some((associations) => association.accountID.toString() === accountID);
+
+    // console.log(`Account ${accountID} is ${isAssociated ? 'associated' : 'unassociated'}`);
+    // } catch(err){
+    //     console.log(err);
+    // }
+// }

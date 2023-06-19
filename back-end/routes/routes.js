@@ -1,39 +1,37 @@
 const express=require("express");
 const router=express.Router();
 
-const {registerEmitter,getAllEmitters,getEmitterById,checkEmitterExistanceByAccId,
-    deleteAllEmitters,getAllTicketList,getTicketById,deleteAllTicket,loginEmitter,carbonAllowanceRequestTkt,
-    emitterAcceptPaybackReq}=require("../controllers/emitter-controller.js");
-
-
+const {registerEmitter,getAllEmitters,getEmitterById,checkEmitterExistanceByAccId,carbonAllowanceRequestTkt,
+    deleteAllEmitters,getAllTicketList,getTicketById,deleteAllTicket,loginEmitter,emitterAcceptPaybackReq
+}=require("../controllers/emitter-controller.js");
 
 const {registerGovt,getGovtDetails,acceptEmitterRegistrationRequest,findUserRegisterDetails,rejectEmitterRegistrationRequest,
     acceptEmitterCCAllowanceRequest,paybackRequestToEmitter,freezeAccountByGovt, getEmitterDetailsRequestForCCFromMRVById,getPaybackDetailsRequestByGovtById,
-    paybackRequestToEmitterByAcId,checkTokenBalance, getPaybackDetailsRequestByGovt, 
-    getEmitterDetailsRequestForCCFromMRV}=require("../controllers/govt-controller.js");
+    paybackRequestToEmitterByAcId,checkTokenBalance, getPaybackDetailsRequestByGovt, getEmitterDetailsRequestForCCFromMRV}=require("../controllers/govt-controller.js");
 
+const {setCCallowance,setCCpayback,setCCallowanceToAllSortedEmitter,deleteAllmrv,getEmitterCCReqById, getMRVDetailsByAccountId, getPaybackRequestDetailsByAllSortedEmitter,
+    getAllmrv,setCCpaybackToAllSortedEmitter,getCCallowanceRequestToAllSortedEmitter,getAllEmitterBeforeCC, getPaybackCCReqById,
+    getPaybackListReqestForAllEmitter}=require("../controllers/mrv-controller.js");
 
- const {setCCallowance,setCCpayback,setCCallowanceToAllSortedEmitter,deleteAllmrv,getEmitterCCReqById, getMRVDetailsByAccountId, getPaybackRequestDetailsByAllSortedEmitter,
-        getAllmrv,setCCpaybackToAllSortedEmitter,getCCallowanceRequestToAllSortedEmitter,getAllEmitterBeforeCC, getPaybackCCReqById,
-        getPaybackListReqestForAllEmitter}=require("../controllers/mrv-controller.js");
+    //Primary Market for buyer
+    const{addBuyerEntryInPrimaryMarket,getAllBuyerList,getBuyerById,expressInterestToBuy,getAllBuyerSchema,deleteAllBuyer}=require("../controllers/buyer-controller.js");
 
+// primary Market for seller
 
-//Routes for Emitter
+const{addSellerEntryPrimaryMarket,getAllSellerList,getSellerById,getInterestedBuyerList,approveTransaction,rejectBuyerTransaction,deleteAllSeller,checkSellerAlreadyExist}=require("../controllers/seller-controller.js")
+    // routes for emitter
 router.route("/addEmitter").post(registerEmitter);
 router.route("/getAllEmitter").get(getAllEmitters);
 router.route("/getEmitterByAcId").get(getEmitterById);
 router.route("/checkEmitterExistance").get(checkEmitterExistanceByAccId);
 router.route("/loginEmitter").post(loginEmitter);
-
-router.route("/deleteAllEmitters").delete(deleteAllEmitters);
 router.route("/paybackReqAccepted").put(emitterAcceptPaybackReq);
 
+// routes for carbon allowance request
 router.route("/ccAllowanceReq").post(carbonAllowanceRequestTkt);
 
-// Routes for Tickets
-router.route("/getAllTickets").get(getAllTicketList);
-router.route("/getTktById").get(getTicketById);
-router.route("/deleteAllTicket").delete(deleteAllTicket);
+// routes for delete all emitters
+router.route("/deleteAllEmitters").delete(deleteAllEmitters);
 
 // routes for government
 router.route("/addGovt").post(registerGovt);
@@ -51,7 +49,10 @@ router.route("/getEmitterDetailsRequestForCCFromMRV").get(getEmitterDetailsReque
 router.route("/getEmitterDetailsRequestForCCFromMRVById").get(getEmitterDetailsRequestForCCFromMRVById);
 router.route("/getPaybackDetailsRequestByGovtById").get(getPaybackDetailsRequestByGovtById);
 
-
+// routes for ticket
+router.route("/getAllTickets").get(getAllTicketList);
+router.route("/getTktById").get(getTicketById);
+router.route("/deleteAllTicket").delete(deleteAllTicket);
 
 // routes for MRV
 router.route("/setCCallowance").put(setCCallowance);
@@ -68,6 +69,23 @@ router.route("/getEmitterCCReqById").get(getEmitterCCReqById);
 router.route("/getPaybackCCReqById").get(getPaybackCCReqById);
 router.route("/getPaybackListReqestForAllEmitter").get(getPaybackListReqestForAllEmitter);
 
+// routes for Buyer
+router.route("/addBuyerEntryInPrimaryMarket").post(addBuyerEntryInPrimaryMarket);
+router.route("/getAllBuyerList").get(getAllBuyerList);
+router.route("/getBuyerById").get(getBuyerById);
+router.route("/expressInterestToBuy").post(expressInterestToBuy);
+router.route("/deleteAllBuyer").delete(deleteAllBuyer);
 
-
+//routes for Seller
+router.route("/addSellerEntryPrimaryMarket").post(addSellerEntryPrimaryMarket);
+router.route("/getAllSellerList").get(getAllSellerList);
+router.route("/getSellerById").get(getSellerById);
+router.route("/getInterestedBuyerList").get(getInterestedBuyerList);
+router.route("/getAllBuyerSchema").get(getAllBuyerSchema);
+router.route("/approveTransaction").put(approveTransaction);
+router.route("/rejectBuyerTransaction").put(rejectBuyerTransaction);
+router.route("/deleteAllSeller").delete(deleteAllSeller);
+router.route("/checkSellerAlreadyExist").post(checkSellerAlreadyExist);
 module.exports=router;
+
+
