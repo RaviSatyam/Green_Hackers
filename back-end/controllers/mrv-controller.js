@@ -15,21 +15,21 @@ const setCCallowance = async (req, res) => {
     const valueTable = {
 
         IND: {
-            manufacturing: 9000,
+            Manufacturing: 9000,
             Automotive: 7000,
             IT: 3000,
             Transportation: 5000
         },
 
         USA: {
-            manufacturing: 8000,
+            Manufacturing: 8000,
             Automotive: 6000,
             IT: 2500,
             Transportation: 4000
         },
 
         UAE: {
-            manufacturing: 7500,
+            Manufacturing: 7500,
             Automotive: 5500,
             IT: 2700,
             Transportation: 3500
@@ -63,21 +63,21 @@ const setCCallowanceToAllSortedEmitter = async (req, res) => {
     const valueTable = {
 
         IND: {
-            manufacturing: 9000,
+            Manufacturing: 9000,
             Automotive: 7000,
             IT: 3000,
             Transportation: 5000
         },
 
         USA: {
-            manufacturing: 8000,
+            Manufacturing: 8000,
             Automotive: 6000,
             IT: 2500,
             Transportation: 4000
         },
 
         UAE: {
-            manufacturing: 7500,
+            Manufacturing: 7500,
             Automotive: 5500,
             IT: 2700,
             Transportation: 3500
@@ -128,21 +128,21 @@ const setCCpayback = async (req, res) => {
     const valueTable = {
 
         IND: {
-            manufacturing: 900,
+            Manufacturing: 900,
             Automotive: 700,
             IT: 300,
             Transportation: 500
         },
 
         USA: {
-            manufacturing: 800,
+            Manufacturing: 800,
             Automotive: 600,
             IT: 250,
             Transportation: 400
         },
 
         UAE: {
-            manufacturing: 750,
+            Manufacturing: 750,
             Automotive: 550,
             IT: 270,
             Transportation: 350
@@ -179,21 +179,21 @@ const setCCpaybackToAllSortedEmitter = async (req, res) => {
 
     const valueTable = {
         IND: {
-            manufacturing: 900,
+            Manufacturing: 900,
             Automotive: 700,
             IT: 300,
             Transportation: 500
         },
 
         USA: {
-            manufacturing: 800,
+            Manufacturing: 800,
             Automotive: 600,
             IT: 250,
             Transportation: 400
         },
 
         UAE: {
-            manufacturing: 750,
+            Manufacturing: 750,
             Automotive: 550,
             IT: 270,
             Transportation: 350
