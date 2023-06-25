@@ -26,8 +26,8 @@ function Navbar_Gov() {
                 </div>
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
-                    <h1 className="text-2xl font-semibold text-lime-700">
-                      CarbonVerse
+                    <h1 className="text-2xl font-semibold text-black">
+                      TCM
                     </h1>
                   </div>
                   <div className="hidden sm:ml-6 sm:block">
@@ -37,7 +37,7 @@ function Navbar_Gov() {
 
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
-                    <h1 className="text-2xl font-semibold text-lime-700">
+                    <h1 className="text-2xl font-semibold text-black">
                       Government Dashboard
                     </h1>
                   </div>
