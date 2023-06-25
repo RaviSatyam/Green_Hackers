@@ -127,14 +127,14 @@ function Set_Id() {
                     {selectedAccountData.description}
                   </p>
                 </div>
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <p className="font-bold">Allowable Carbon Credit:</p>
                   <p>{selectedAccountData.allowableCarbonCredits}</p>
                 </div>
                 <div className="mb-4">
                   <p className="font-bold">Allowable Carbon Emission:</p>
                   <p>{selectedAccountData.allowableCarbonEmission}</p>
-                </div>
+                </div> */}
                 <div className="mb-4">
                   <p className="font-bold">Region:</p>
                   <p>{selectedAccountData.region}</p>
@@ -143,14 +143,14 @@ function Set_Id() {
                   <p className="font-bold">Industry Type:</p>
                   <p>{selectedAccountData.industryType}</p>
                 </div>
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <p className="font-bold">Carbon Emitted:</p>
                   <p>{selectedAccountData.carbonEmitted}</p>
                 </div>
                 <div className="mb-4">
                   <p className="font-bold">Payback CC:</p>
                   <p>{selectedAccountData.paybackCC}</p>
-                </div>
+                </div> */}
 
                 <div className="flex justify-center ">
                   {loader ? (<div
