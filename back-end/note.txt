@@ -1,0 +1,12 @@
+1. Factory deploy
+2. Emitter Contract ID
+3. Decode-> Emitter Contract ID
+
+
+
+------- Function Call-----
+4. calculateLockFundAmount()
+5. lockfund()
+6. tokenTransferToEmitter()
+7. sendPaybackReqToEmitter()
+8. acceptPaybackRequest()
