@@ -17,16 +17,27 @@ const PairHashPack = () => {
 const [accountId, setAccountId] = useState('');
 const navigate = useNavigate();
 
+
+
 useEffect(() => {
  const PairHashPack = async () => {
-  let initData = await hashconnect.init(appMetadata, "testnet", true);
-  console.warn('initdata',initData);
 
-  hashconnect.foundExtensionEvent.once((walletMetadata) => {
+  await hashconnect.init(appMetadata, "testnet", true);
+  // console.warn('initdata',initData);
+  const timer = setTimeout(() => {
+    console.log("No wallet found");
+    window.location.href = "https://www.hashpack.app/download";
+}, 3000);
+  hashconnect.foundExtensionEvent.once(async(walletMetadata) => {
    console.log(walletMetadata);
    console.log('found extenstion works');
-   hashconnect.connectToLocalWallet(initData.pairingString, walletMetadata);
+   clearTimeout(timer);
+   hashconnect.connectToLocalWallet(walletMetadata);
+
   },[accountId]);
+   
+  
+  
 
   let accountIdPromise = new Promise((resolve) => {
    hashconnect.pairingEvent.once((pairingData) => {
@@ -73,7 +84,9 @@ useEffect(() => {
  };
 
  PairHashPack();
+
 },[]);
+
 
 return (
 <>

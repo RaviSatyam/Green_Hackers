@@ -15,29 +15,29 @@ const setCCallowance = async (req, res) => {
     const valueTable = {
 
         IND: {
-            Manufacturing: 9000,
-            Automotive: 7000,
-            IT: 3000,
-            Transportation: 5000
+            Manufacturing: 900,
+            Automotive: 700,
+            IT: 300,
+            Transportation: 500
         },
 
         USA: {
-            Manufacturing: 8000,
-            Automotive: 6000,
-            IT: 2500,
-            Transportation: 4000
+            Manufacturing: 800,
+            Automotive: 600,
+            IT: 250,
+            Transportation: 400
         },
 
         UAE: {
-            Manufacturing: 7500,
-            Automotive: 5500,
-            IT: 2700,
-            Transportation: 3500
+            Manufacturing: 750,
+            Automotive: 550,
+            IT: 270,
+            Transportation: 350
         }
 
     };
     const x = valueTable[region][industryType] || 0;
-    const cc = x / 10;
+    const cc = x ;
 
     if (emitter.isEmitter && !emitter.allowableCarbonEmission) {
         try {
@@ -63,29 +63,29 @@ const setCCallowanceToAllSortedEmitter = async (req, res) => {
     const valueTable = {
 
         IND: {
-            Manufacturing: 9000,
-            Automotive: 7000,
-            IT: 3000,
-            Transportation: 5000
+            Manufacturing: 900,
+            Automotive: 700,
+            IT: 300,
+            Transportation: 500
         },
 
         USA: {
-            Manufacturing: 8000,
-            Automotive: 6000,
-            IT: 2500,
-            Transportation: 4000
+            Manufacturing: 800,
+            Automotive: 600,
+            IT: 250,
+            Transportation: 400
         },
 
         UAE: {
-            Manufacturing: 7500,
-            Automotive: 5500,
-            IT: 2700,
-            Transportation: 3500
+            Manufacturing: 750,
+            Automotive: 550,
+            IT: 270,
+            Transportation: 350
         }
 
     };
     const x = valueTable[region][industryType] || 0;
-    const cc = x / 10;
+    const cc = x ;
     //const value = valueTable[region][industryType] || 0; // set a default value if region or industry type is not recognized
 
     console.log(`The value for region ${region} and industry type ${industryType} is ${x}.`);
@@ -128,29 +128,29 @@ const setCCpayback = async (req, res) => {
     const valueTable = {
 
         IND: {
-            Manufacturing: 900,
-            Automotive: 700,
-            IT: 300,
-            Transportation: 500
+            Manufacturing: 90,
+            Automotive: 70,
+            IT: 30,
+            Transportation: 50
         },
 
         USA: {
-            Manufacturing: 800,
-            Automotive: 600,
-            IT: 250,
-            Transportation: 400
+            Manufacturing: 80,
+            Automotive: 60,
+            IT: 25,
+            Transportation: 40
         },
 
         UAE: {
-            Manufacturing: 750,
-            Automotive: 550,
-            IT: 270,
-            Transportation: 350
+            Manufacturing: 75,
+            Automotive: 55,
+            IT: 27,
+            Transportation: 35
         }
 
     };
     const x = valueTable[region][industryType] || 0;
-    const cc = x / 10;
+    const cc = x ;
     // const currentDate = new Date();
     // const durationInDays = 5;
 
@@ -179,29 +179,29 @@ const setCCpaybackToAllSortedEmitter = async (req, res) => {
 
     const valueTable = {
         IND: {
-            Manufacturing: 900,
-            Automotive: 700,
-            IT: 300,
-            Transportation: 500
+            Manufacturing: 90,
+            Automotive: 70,
+            IT: 30,
+            Transportation: 50
         },
 
         USA: {
-            Manufacturing: 800,
-            Automotive: 600,
-            IT: 250,
-            Transportation: 400
+            Manufacturing: 80,
+            Automotive: 60,
+            IT: 25,
+            Transportation: 40
         },
 
         UAE: {
-            Manufacturing: 750,
-            Automotive: 550,
-            IT: 270,
-            Transportation: 350
+            Manufacturing: 75,
+            Automotive: 55,
+            IT: 27,
+            Transportation: 35
         }
 
     };
     const x = valueTable[region][industryType] || 0;
-    const cc = x / 10;
+    const cc = x ;
     //const value = valueTable[region][industryType] || 0; 
     // set a default value if region or industry type is not recognized
 
