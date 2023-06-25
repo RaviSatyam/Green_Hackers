@@ -219,7 +219,7 @@ icon: "https://absolute.url/to/icon.png",
                 About
               </h2>
               <p className="mb-8 font-light text-slate-400 lg:text-xl">
-                At CarbonVerse, we are dedicated to helping organizations to
+                At TCM, we are dedicated to helping organizations to
                 make a positive impact on the environment by tracking and
                 reducing their carbon footprint.
               </p>
@@ -834,7 +834,7 @@ icon: "https://absolute.url/to/icon.png",
               />
               <div className="flex items-center divide-x-2 divide-gray-500 divide-gray-700">
                 <div className="pr-3 font-medium text-gray-900 text-black">
-                  Micheal Clark
+                  Sumit Kumar
                 </div>
                 <div className="pl-3 text-sm font-light text-gray-500 text-gray-400">
                   Green Hackers
