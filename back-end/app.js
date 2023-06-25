@@ -3,6 +3,10 @@ const express=require("express");
 const app=express();
 app.use(express.json());
 app.disable('etag');
+const cors = require('cors');
+app.use(cors({
+    origin: '*'   //'://www.section.io'
+}));
 
 
 const connectDB=require("./db/connect");
