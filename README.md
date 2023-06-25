@@ -57,6 +57,12 @@ Once these applications start running at different ports you need to go to the w
 This decentralized application (Dapp) has been developed specifically for proof of concept (POC) purposes. We have thoroughly tested the entire user journey using their account IDs. Looking ahead, there is potential to expand the implementation of this application on a larger scale.
 
 
+## Project Descriptions Link- 
+`https://alapanx.notion.site/alapanx/TRANSPARENT-CARBON-MARKET-c5559eaf1559402999121d9d3f6a702d`
+
+## Pitch Video Link- 
+Refer the documentation to see the demonstration video link.
+
 ## Author
 
 Green_Hackers
