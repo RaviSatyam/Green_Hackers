@@ -1,4 +1,4 @@
-# Transparent-Carbon-Friend 
+# Transparent-Carbon-Market
 
 This  Dapp provides scripts to run this application on your local system. You have to run front-end as well as back-end on your local system with different port.
 ## Getting Started
